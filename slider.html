@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;1,300;1,400&family=Righteous&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="shortcut icon" href="https://img.icons8.com/color/2x/gallery.png" />
+    <title>Slider</title>
+    <style>
+      /* CSS */
+      body {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        font-family: "Poppins", sans-serif;
+        background-color: #ffdee9;
+        background-image: linear-gradient(0deg, #ffdee9 0%, #b5fffc 100%);
+      }
+      h2 {
+        margin: 0;
+        font-family: "Righteous", cursive;
+        font-size: 60px;
+        background-color: #4158d0;
+        background-image: linear-gradient(43deg, #4158d0 0%, #c850c0 46%, #ffcc70 100%);
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      nav {
+        position: relative;
+      }
+      .search {
+        width: 100%;
+        position: relative;
+        display: flex;
+      }
+
+      .searchTerm {
+        width: 100%;
+        border: 3px solid #00b4cc;
+        border-right: none;
+        padding: 5px;
+        height: 20px;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        color: #9dbfaf;
+      }
+
+      .searchTerm:focus {
+        color: #00b4cc;
+      }
+
+      .searchButton {
+        width: 40px;
+        height: 36px;
+        border: 1px solid #00b4cc;
+        background: #00b4cc;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-size: 20px;
+      }
+
+      .wrap {
+        width: 30%;
+        position: absolute;
+        top: 40%;
+        right: -10%;
+        transform: translate(-50%, -50%);
+      }
+
+      h5 {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-color: #ff3cac;
+        background-image: linear-gradient(225deg, #ff3cac 0%, #784ba0 50%, #2b86c5 100%);
+      }
+      #img {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 85%;
+        height: 500px;
+        border-radius: 9px;
+      }
+      #img img {
+        object-fit: contain;
+      }
+      #btn {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        bottom: 10px;
+        left: 45%;
+      }
+
+      .btn-grad {
+        background-image: linear-gradient(to right, #2bc0e4 0%, #eaecc6 51%, #2bc0e4 100%);
+      }
+      .btn-grad {
+        padding: 10px;
+        margin: 10px;
+        text-align: center;
+        text-transform: uppercase;
+        transition: 0.5s;
+        background-size: 200% auto;
+        color: white;
+        box-shadow: 8px 8px 16px #2bc0e4;
+        border-radius: 50%;
+        display: block;
+      }
+
+      .btn-grad:hover {
+        background-position: right center;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .btn-grad-2 {
+        background-image: linear-gradient(to right, #ed4264 0%, #ffedbc 51%, #ed4264 100%);
+      }
+      .btn-grad-2 {
+        padding: 10px;
+        margin: 10px;
+        text-align: center;
+        text-transform: uppercase;
+        transition: 0.5s;
+        background-size: 200% auto;
+        color: white;
+        box-shadow: 8px 8px 16px #ed4264;
+        border-radius: 50%;
+        display: block;
+      }
+
+      .btn-grad-2:hover {
+        background-position: right center;
+        color: #fff;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Container -->
+    <div class="container">
+      <nav>
+        <div><h2>Photo Slide Show</h2></div>
+        <div class="wrap">
+          <div class="search">
+            <input type="text" class="searchTerm" placeholder="Search Photos" id="input" />
+            <button type="submit" class="searchButton" onclick="fetchimg()">
+              <span class="material-icons">
+                search
+              </span>
+            </button>
+          </div>
+        </div>
+        <h5 id="msg">To Star Slide Show Just Search</h5>
+      </nav>
+
+      <div>
+        <center>
+          <div id="img">
+            <img alt="404 please Search Image" src="https://source.unsplash.com/random" width="100%" height="100%" />
+          </div>
+        </center>
+        <div id="btn">
+          <button class="btn-grad" onclick="start()"><span class="material-icons">play_arrow</span></button>
+          <button class="btn-grad-2" onclick="stop()"><span class="material-icons">motion_photos_pause</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      var count = 0;
+      var image = [];
+      var show;
+
+      // Fatch function on Search
+
+      function fetchimg() {
+        image = [];
+        input = document.getElementById("input").value;
+        console.log(input);
+        fetch("https://api.unsplash.com/search/photos?query=" + input + "&per_page=30&client_id=OBwLhzki1KJ0B8oGponEDbTv5ssmICOHyuetcZikPZk")
+          .then((response) => {
+            if (!response.ok) throw Error(response.statusText);
+            return response.json();
+          })
+
+          .then((data) => {
+            for (var item of data.results) {
+              image.push(item.urls.full);
+              console.log(image);
+            }
+          });
+
+        start();
+      }
+
+      // slide show function
+
+      function slideShow() {
+        document.querySelector("img").src = image[count];
+        count++;
+      }
+
+      // Start button
+      function start() {
+        input = document.getElementById("input").value;
+        if (input == "") {
+          alert("Please Search Photos. You can use Keyword Like - Nature, Book, Car etc");
+        } else {
+          show = setInterval(slideShow, 5000);
+          document.getElementById("msg").innerHTML = "Slide Show is Running";
+        }
+      }
+
+      // Stop Button
+      function stop() {
+        clearInterval(show);
+        document.getElementById("msg").innerHTML = "Slide Show is Stopped";
+      }
+    </script>
+  </body>
+</html>
