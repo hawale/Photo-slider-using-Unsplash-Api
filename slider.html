@@ -16,14 +16,18 @@
         flex-direction: column;
         font-family: "Poppins", sans-serif;
         background-color: #ffdee9;
-        background-image: linear-gradient(0deg, #ffdee9 0%, #b5fffc 100%);
+        /* background-image: linear-gradient(103.3deg, rgba(252, 225, 208, 1) 30%, rgba(255, 173, 214, 1) 55.7%, rgba(162, 186, 245, 1) 81.8%); */
+        background-image: linear-gradient(177.5deg, rgba(149, 222, 250, 1) 8.4%, rgba(0, 109, 208, 1) 105.1%);
       }
       h2 {
         margin: 0;
         font-family: "Righteous", cursive;
         font-size: 60px;
-        background-color: #4158d0;
-        background-image: linear-gradient(43deg, #4158d0 0%, #c850c0 46%, #ffcc70 100%);
+        background-color: #ffff;
+        background-color: #08aeea;
+        background-color: #f4d03f;
+        background-color: #ff3cac;
+        background-image: linear-gradient(225deg, #ff3cac 0%, #784ba0 50%, #2b86c5 100%);
 
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -99,7 +103,7 @@
         display: flex;
         justify-content: center;
         bottom: 10px;
-        left: 45%;
+        left: 42%;
       }
 
       .btn-grad {
@@ -154,7 +158,7 @@
         <div><h2>Photo Slide Show</h2></div>
         <div class="wrap">
           <div class="search">
-            <input type="text" class="searchTerm" placeholder="Search Photos" id="input" />
+            <input type="text" class="searchTerm" placeholder="Search Photos" id="input" onkeypress="varifyEnter(event)" />
             <button type="submit" class="searchButton" onclick="fetchimg()">
               <span class="material-icons">
                 search
@@ -174,6 +178,10 @@
         <div id="btn">
           <button class="btn-grad" onclick="start()"><span class="material-icons">play_arrow</span></button>
           <button class="btn-grad-2" onclick="stop()"><span class="material-icons">motion_photos_pause</span></button>
+          <button class="btn-grad" onclick="fullscreen()"><span class="material-icons">open_in_new</span></button>
+          <!-- <button class="btn-grad-2" onclick="download()">
+            <span class="material-icons">download</span>
+          </button> -->
         </div>
       </div>
     </div>
@@ -183,6 +191,12 @@
       var count = 0;
       var image = [];
       var show;
+      // on keypress Enter
+      function varifyEnter(e) {
+        if (e.keyCode == 13) {
+          fetchimg();
+        }
+      }
 
       // Fatch function on Search
 
@@ -206,10 +220,19 @@
         start();
       }
 
+      function fullscreen() {
+        window.open(image[count], "_blank");
+      }
+
+      // function download() {
+
+      // }
+
       // slide show function
 
       function slideShow() {
         document.querySelector("img").src = image[count];
+        document.getElementById("dwn").href = image[count];
         count++;
       }
 
@@ -227,7 +250,7 @@
       // Stop Button
       function stop() {
         clearInterval(show);
-        document.getElementById("msg").innerHTML = "Slide Show is Stopped";
+        document.getElementById("msg").innerHTML = "Slide Show has Stopped";
       }
     </script>
   </body>
